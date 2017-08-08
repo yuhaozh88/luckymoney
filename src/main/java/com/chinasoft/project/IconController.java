@@ -68,19 +68,27 @@ public class IconController {
 		response.addHeader("Pragma", "no-cache");
 		response.addDateHeader("Expires", 0);
 		HttpSession session = request.getSession();
-		String icon_chosen = request.getParameter("icon_chosen");
-		if (icon_chosen != null && icon_chosen != "") {
-			byte[] icon = ImageDAO.getIcon(request);
-			String itcode = (String)session.getAttribute("itcode");
-			DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
-		} else {
-			byte[] icon = ImageDAO.getDefaultIcon(request);
-			String itcode = (String)session.getAttribute("itcode");
-			DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
-		}
+//		String icon_chosen = (String)session.getAttribute("icon_chosen");
+//		if (icon_chosen != null && icon_chosen != "") {
+//			byte[] icon = ImageDAO.getIcon(request);
+//			String itcode = (String)session.getAttribute("itcode");
+//			DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
+//		} else {
+//			byte[] icon = ImageDAO.getDefaultIcon(request);
+//			String itcode = (String)session.getAttribute("itcode");
+//			DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
+//		}
+		byte[] icon = ImageDAO.getIcon(request);
+		String itcode = (String)session.getAttribute("itcode");
+		DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
 		return "chat";
 	}
 	
+	/**
+	 * 为聊天界面提供用户的头像
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping("showicon")
 	public void showicon(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();

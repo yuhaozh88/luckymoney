@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.Icon;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -27,10 +28,9 @@ public class ImageDAO {
 		File repository = new File("resources/img/");
 		factory.setRepository(repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
-			List<FileItem> items;
 			try {
-				items = upload.parseRequest(request);
-				if (items != null) {
+				List<FileItem> items = upload.parseRequest(request);
+				if (items != null) {//用户上传了头像
 					byte[] icon = null;
 					for (int i = 0; i < items.size();i += 2) {
 						FileItem item = items.get(i);
@@ -38,7 +38,7 @@ public class ImageDAO {
 					}
 					return icon;
 				} else {
-					return null;
+					return getDefaultIcon(request);
 				}
 			} catch (FileUploadException e) {
 				// TODO Auto-generated catch block

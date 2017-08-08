@@ -102,6 +102,7 @@ public class HomeController {
 		}
 		HttpSession session = request.getSession();
 		session.removeAttribute("itcode");
-		session.
+		session.removeAttribute("nickname");
+		return "register";
 	}
 }

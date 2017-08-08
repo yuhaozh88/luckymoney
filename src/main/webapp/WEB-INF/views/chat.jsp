@@ -95,11 +95,14 @@ window.setInterval("getUsersOnline();",5000);
 	<div id="left" style="height: 100%;" class="left">
 		<div class="leftTop">
 			<table align="center">
-				<tr><td><img src="showicon" width="50" height="50"></td>
-					<td><%= (String)session.getAttribute("nickname")%></td>
+				<tr>
+					<td><img src="showicon" width="50" height="50"></td>
 				</tr>
 				<tr>
-					<td><input value="注销" onclick=""></td>
+					<td>昵称：<%= (String)session.getAttribute("nickname")%></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="注销" onclick=""></td>
 				</tr>
 			</table>
 		</div>
