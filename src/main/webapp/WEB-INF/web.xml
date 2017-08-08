@@ -23,4 +23,7 @@
   <listener>
     <listener-class>com.chinasoft.project.listener.SessionListener</listener-class>
   </listener>
+  <listener>
+    <listener-class>com.chinasoft.project.listener.SessionListener</listener-class>
+  </listener>
 </web-app>

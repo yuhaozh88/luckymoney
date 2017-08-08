@@ -15,33 +15,54 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.junit.runner.Request;
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
+import org.springframework.http.HttpRequest;
 
 public class ImageDAO {
 	
-	/**
-	 * 根据用户选择的路径选择图片
-	 * @param path 用户选择头像的路径
-	 * @return 返回byte数组为用户选择的头像，返回为null则选择失败
-	 */
-	public static byte[] getIcon (String path,HttpServletRequest request) {
+	
+	public static byte[] getIcon (HttpServletRequest request) {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
-		File repository = new File("F:/temp");
+		File repository = new File("resources/img/");
 		factory.setRepository(repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		try {
-			List<FileItem> items = upload.parseRequest(request);
-			if (items != null) {
-				byte[] icon = null;
-				for (int i = 0; i < items.size();i += 2) {
-					FileItem item = items.get(i);
-					icon = item.get();
+			List<FileItem> items;
+			try {
+				items = upload.parseRequest(request);
+				if (items != null) {
+					byte[] icon = null;
+					for (int i = 0; i < items.size();i += 2) {
+						FileItem item = items.get(i);
+						icon = item.get();
+					}
+					return icon;
+				} else {
+					return null;
 				}
-				return icon;
-			} else {
+			} catch (FileUploadException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
 				return null;
 			}
-		} catch (FileUploadException e) {
+	}
+	public static byte[] getDefaultIcon(HttpServletRequest request) {
+		String rootPath = request.getSession().getServletContext().getRealPath("/");
+		//System.out.println(rootPath);
+		File file = new File(rootPath+"resources/img/default.jpg");
+		try {
+			FileInputStream input = new FileInputStream(file);
+			byte[] icon = new byte[(int)file.length()];
+			input.read(icon);
+			input.close();
+			return icon;
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
 			return null;
 		}
 	}

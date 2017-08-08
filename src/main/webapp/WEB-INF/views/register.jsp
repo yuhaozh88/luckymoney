@@ -41,13 +41,13 @@ function checkNickname(){
 function checkPassword(){
 	var password = document.getElementById("password").value;
 	if (password != null && password != ""){
-		check3 = true;
+		//check3 = true;
 		document.getElementById("warningPassword").style.color = "green";
-		document.getElementById("warningPassword").innerHTML = "√";
+		//document.getElementById("warningPassword").innerHTML = "√";
 	} else {
-		check3 = false;
+		//check3 = false;
 		document.getElementById("warningPassword").style.color = "red";
-		document.getElementById("warningPassword").innerHTML ="密码不能为空！";
+		//document.getElementById("warningPassword").innerHTML ="密码不能为空！";
 	}
 }
 function checkConfirm(){
@@ -105,9 +105,9 @@ function checkDeptName(){
 }
 function checkEmpty(){
 	if (check1 && check2 && check3 && check4 && check6 && check7){
-		document.getElementById("submit").disabled = false;
+		document.getElementById("log").disabled = false;
 	} else {
-		document.getElementById("submit").disabled = true;
+		document.getElementById("log").disabled = true;
 	}
 }//end checkEmpty()
 function initAjax(){//初始化AJAX
@@ -127,7 +127,6 @@ function initAjax(){//初始化AJAX
 	}
 	return xmlHttp;
 }
-
 function getRealname(){
 	var httpRequest = initAjax();
 	var itcode = document.getElementById("itcode").value;
@@ -164,6 +163,111 @@ function changeIcon(){
 		document.getElementById("iconImage").src = path;
 	} 
 }
+function submitForm(){
+	var httpRequest = initAjax();
+	var itcode = document.getElementById("itcode").value;
+	var nickname = document.getElementById("nickname").value;
+	var dept_name = document.getElementById("dept_name").value;
+	var question = document.getElementById("question").value;
+	var answer = document.getElementById("answer").value;
+	var password = document.getElementById("password").value;
+	httpRequest.open("get","login?itcode="+itcode+"&nickname="+nickname+"&dept_name="+dept_name+"&question="+question+"&answer="+answer+"&password="+password,true);
+	httpRequest.onreadystatechange = function (){
+		if (httpRequest.readyState == 4){
+			if (httpRequest.status == 200){
+			}
+		}
+	}
+	httpRequest.send(null);
+}
+function onSubmit(){
+	var form = document.form2;
+	form.submit();
+}
+
+function CharMode(iN)
+{    
+    if (iN>=48 && iN <=57) //数字    
+        return 1;    
+    if (iN>=65 && iN <=90) //大写    
+        return 2;    
+    if (iN>=97 && iN <=122) //小写    
+        return 4;    
+    else    
+        return 8;     
+}  
+//bitTotal函数    
+//计算密码模式    
+function bitTotal(num)
+{    
+    modes=0;    
+    for (i=0;i<4;i++)
+    {    
+        if (num & 1) modes++;    
+        num>>>=1;    
+    }  
+    return modes;    
+}  
+//返回强度级别    
+function checkStrong(sPW){    
+    if (sPW.length<3)    
+        return 0; //密码太短，不检测级别  
+    Modes=0;    
+    for (i=0;i<sPW.length;i++){    
+        //密码模式    
+        Modes|=CharMode(sPW.charCodeAt(i));    
+    }  
+    return bitTotal(Modes);    
+}  
+function strength(pwd)
+{
+	Dfault_color="#eeeeee";     //默认颜色  
+    L_color="#FF0000";      //低强度的颜色，且只显示在最左边的单元格中  
+    M_color="#FF9900";      //中等强度的颜色，且只显示在左边两个单元格中  
+    H_color="#33CC00";      //高强度的颜色，三个单元格都显示  
+    if (pwd==null||pwd=='')
+    {    
+        Lcolor=Mcolor=Hcolor=Dfault_color;
+        document.getElementById("warningPassword").style.color = "red";
+        document.getElementById("warningPassword").innerHTML = "密码不能为空！";
+        check3 = false;
+    }    
+    else
+    {    
+        S_level=checkStrong(pwd);    
+        switch(S_level)
+        {    
+	        case 0:    
+	            Lcolor=Mcolor=Hcolor=Dfault_color;
+	            check3 = false;
+	            document.getElementById("warningPassword").style.color = "red";
+	            document.getElementById("warningPassword").innerHTML="密码过短，最少3位";
+	            break;  
+	        case 1:    
+	            Lcolor=L_color;  
+	            check3 = true;
+	            document.getElementById("warningPassword").style.color = "green";
+	            document.getElementById("warningPassword").innerHTML="密码强度低";
+	            Mcolor=Hcolor=Dfault_color;  
+	            break;    
+	        case 2:    
+	            Lcolor=Mcolor=M_color;
+	            check3 = true;
+	           	document.getElementById("warningPassword").style.color = "green";
+	            document.getElementById("warningPassword").innerHTML="密码强度中";
+	            Hcolor=Dfault_color;    
+	            break;    
+	        default:
+	            check3 = true;
+		        document.getElementById("warningPassword").style.color = "green";
+	       	 	document.getElementById("warningPassword").innerHTML="密码强度高";
+	            Lcolor=Mcolor=Hcolor=H_color;    
+    	}    
+	}    
+	document.getElementById("strength_L").style.background=Lcolor;
+	document.getElementById("strength_M").style.background=Mcolor;
+	document.getElementById("strength_H").style.background=Hcolor;
+}
 </script>
 </head>
 <body>
@@ -171,57 +275,98 @@ function changeIcon(){
 window.setInterval("checkEmpty();checkChangeIcon();",1000);
 </script>
 
-<form name="form1" id="form1" action="login">
-<table align="center" style="border-collapse:separate; border-spacing:0px 20px;" id="teble1" border="0">
-<tr><td>&nbsp;&nbsp;<img alt=""  src="resources/img/default.jpg" id="iconImage" width="100" height="100"></td></tr><br><br>
+<form name="form1" id="form1">
+<table align="center" style="border-collapse:separate; border-spacing:0px 20px;" id="table0" border="0">
+	<tr>
+		<td>&nbsp;&nbsp;<img alt=""  src="resources/img/default.jpg" id="iconImage" width="100" height="100"></td>
+	</tr><br><br>
 </table>
-<table align="center" style="border-collapse:separate; border-spacing:0px 20px;" id="teble1" border="0">
-<tr><td>员工号</td><td><div style="color:red;">*</div></td><td><input type="text" name="itcode" id ="itcode" onclick="checkEmpty()" onblur="checkItcode();getRealname();checkEmpty();"></td><td><div id="warningItcode"></div></td></tr>
-<tr><td>真实姓名</td><td><div style="color:red;">*</div></td><td><div id="realname" ></div></td><td><div id="warningRealname"></div></td></tr>
-<tr><td>部门</td><td><div style="color:red;">*</div></td><td>
-															<select name="dept_name" id="dept_name" onclick="checkEmpty();" onblur="checkDeptName();checkEmpty();">
-																<option value="dept1">
-																	部门1
-																</option>	
-																<option value="dept2">
-																	部门2
-																</option>
-																<option value="dept3">
-																	部门3
-																</option>
-																<option value="dept4">
-																	部门4
-																</option>
-															</select>
-														</td><td><div id="warningDeptName"></div></td></tr>
-<tr><td>昵称</td><td><div style="color:red;">*</div></td><td><input type ="text" name="nickname" id="nickname" onclick="checkEmpty()" onblur="checkNickname();checkEmpty();"></td><td><div id="warningNickename"></div></td></tr>
-<tr><td>密码</td><td><div style="color:red;">*</div></td><td><input type="password" name="password" id="password" onclick="checkEmpty()" onblur="checkPassword();checkConfirm();checkEmpty();"></td><td><div id="warningPassword"></div></td></tr>
-<tr><td>确认密码</td><td><div style="color:red;">*</div></td><td><input type="password" name="confirm" id="confirm" onclick="checkEmpty()" onblur="checkConfirm();checkEmpty();"></td><td><div id="warningConfirm"></div></td></tr>
-<tr><td>密保问题</td><td><div style="color:red;">*</div></td><td>
-																<select name="question" id="question">
-																	<option value="question1">
-																		您父亲的名字
-																	</option>
-																	<option value="question2">
-																		您母亲的名字
-																	</option>
-																	<option value="question3">
-																		您小学班主任的名字
-																	</option>
-																	<option value="question4">
-																		您初中学校的名字
-																	</option>
-																	<option value="question5">
-																		您高中班主任的名字
-																	</option>
-																</select>
-															  </td><td><div id="warningQuestion"></div></td></tr>
-<tr><td>密保问题答案</td><td><div style="color:red;">*</div></td><td><input type="text" name="answer" id="answer" onclick="checkEmpty()" onblur="checkAnswer();checkEmpty();"></td><td><div id="warningAnswer"></div></td></tr>
-<tr><td>上传头像</td><td></td><td><input type="file" name="icon" id="icon" onblur="checkChangeIcon()"></td></tr>
-</table>
-<table id="table2" align="center">
-<tr><td><input type="button" name="preview" id="preview" value="预览头像" disabled="true" onclick="changeIcon();"></td><td><input type="submit" name="submit" id="submit" value="注册" disabled="true"></td></tr>
-</table>
+<table align="center" style="border-collapse:separate; border-spacing:0px 20px;" id="table1" border="0">
+	<tr>
+		<td>员工号</td>
+		<td><div style="color:red;">*</div></td><td><input type="text" name="itcode" id ="itcode" onclick="checkEmpty()" onblur="checkItcode();getRealname();checkEmpty();"></td>
+		<td><div id="warningItcode"></div></td>
+	</tr>
+	<tr>
+		<td>真实姓名</td><td><div style="color:red;">*</div></td><td><div id="realname" ></div></td>
+		<td><div id="warningRealname"></div></td>
+	</tr>
+	<tr>
+		<td>部门</td><td><div style="color:red;">*</div></td>
+		<td>
+			<select name="dept_name" id="dept_name" onclick="checkEmpty();" onblur="checkDeptName();checkEmpty();">
+				<option value="部门1">
+			部门1
+		</option>	
+				<option value="部门2">
+			部门2
+		</option>
+				<option value="部门3">
+			部门3
+		</option>
+				<option value="部门4">
+			部门4
+		</option>
+			</select>
+		</td>
+		<td><div id="warningDeptName"></div></td>
+	</tr>
+	<tr>
+		<td>昵称</td><td><div style="color:red;">*</div></td>
+		<td><input type ="text" name="nickname" id="nickname" onclick="checkEmpty()" onblur="checkNickname();checkEmpty();"></td>
+		<td><div id="warningNickename"></div></td>
+	</tr>
+	<tr>
+		<td>密码</td>
+		<td><div style="color:red;">*</div></td>
+		<td><input type="password" name="password" id="password" onclick="checkEmpty()" onblur="strength(this.value);checkConfirm();checkEmpty();"></td>
+		<td><div id="warningPassword"></div></td><td  id="strength_L" bgcolor="#eeeeee">弱&nbsp;&nbsp;</td> 
+		<td id="strength_M" bgcolor="#eeeeee">中&nbsp;&nbsp;</td><td id="strength_H" bgcolor="#eeeeee">强&nbsp;&nbsp;</td>
+	</tr>
+	<tr>
+		<td>确认密码</td><td><div style="color:red;">*</div></td>
+		<td><input type="password" name="confirm" id="confirm" onclick="checkEmpty()" onblur="checkConfirm();checkEmpty();"></td>
+		<td><div id="warningConfirm"></div></td>
+	</tr>
+	<tr>
+		<td>密保问题</td><td><div style="color:red;">*</div></td>
+		<td>
+			<select name="question" id="question">
+				<option value="您父亲的名字">
+					您父亲的名字
+				</option>
+				<option value="您母亲的名字">
+					您母亲的名字
+				</option>
+				<option value="您小学班主任的名字">
+					您小学班主任的名字
+				</option>
+				<option value="您初中学校的名字">
+					您初中学校的名字
+				</option>
+				<option value="您高中班主任的名字">
+					您高中班主任的名字
+				</option>
+			</select>
+		</td>
+		<td><div id="warningQuestion"></div></td>
+	</tr>
+	<tr>
+		<td>密保问题答案</td>
+		<td><div style="color:red;">*</div></td>
+		<td><input type="text" name="answer" id="answer" onclick="checkEmpty()" onblur="checkAnswer();checkEmpty();"></td>
+		<td><div id="warningAnswer"></div></td>
+	</tr>
 </form>
+<form name="form2" id="form2" action ="uploadicon" method="post" enctype="multipart/form-data"> 
+	<tr>
+		<td>上传头像</td><td></td><td><input type="file" name="icon" id="icon" onblur="checkChangeIcon()"></td>
+	</tr>
+	<tr>
+		<td><input type="button" name="preview" id="preview" value="预览头像" disabled="true" onclick="changeIcon();"></td>
+		<td><input type="button" name="log" id="log" value="注册" disabled="true" onclick="submitForm();onSubmit();"></td>
+	</tr>
+</form>
+</table>
 </body>
 </html>

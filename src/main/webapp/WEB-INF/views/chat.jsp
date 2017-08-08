@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html style="height: 100%;">
 <head>
 <meta http-equiv="Content-Type" content="text/html;">
 <title>聊天</title>
@@ -9,9 +9,10 @@
 	body,html{
 		margin:0px;
 	}
+	  
    	#left {  
         width: 20%;    /*这里是百分比或者像素值，对应下面的center就是百分比或者像素值*/  
-        background: red;    
+        //background: red;    
         height:100%;
         overflow:auto; 
         float:left;
@@ -19,31 +20,31 @@
     #right {  
         width: 80%;  /*这里是百分比或者像素值，对应下面的center就是百分比或者像素值*/  
         height: 100%;  
-        background: pink;  
+        //background: pink;  
         overflow:auto;
         float:right;
     }
     .rightTop{
     	height:80%;
     	width:100%;
-    	background:blue;
+    	//background:blue;
     	float:right;
     }
     .rightBottom{
     	height:20%;
     	width:100%;
-    	background:yellow;
+    	//background:yellow;
     	float:right;
     }
 	.leftTop{
 		height:20%;
 		width:100%;
-		background:green;
+		//background:green;
 	}
 	.leftMiddle{
 		height:10%;
 		width:100%;
-		background:black;
+		//background:black;
 	}
 	.leftBottom{
 		height:70%;
@@ -71,50 +72,57 @@ function initAjax(){//初始化AJAX
 function getUsersOnline(){
 	var httpRequest = initAjax();
 	httpRequest.open("get","getusersonline?usersonline=check",true);
-	if (httpRequest.readyState == 4){
-		if (httpRequest.status == 200){
-			var usersonline = httpRequest.responseText;
-			if (usersonline != null){
-				document.getElementById("users").innerHTML.value = usersonline;
+	httpRequest.onreadystatechange = function (){
+		if (httpRequest.readyState == 4){
+			if (httpRequest.status == 200){
+				var nameList = httpRequest.responseText;
+				document.getElementById("nameList").innerHTML = nameList;
 			}
 		}
 	}
+	httpRequest.send(null);
 }
-function checkEmpty(){
-	var message = document.getElementById("message").value;
-	if (message != null && message != ""){
-		document.getElementById("send").disabled = false;
-	} else {
-		document.getElementById("send").disabled = true;
-	}
+function logout(){
+	window.location.href="logout";
 }
 </script>
 </head>
-
-<div>
-
-	<div id="left">
+<body style="height: 100%;">
+<script type="text/javascript">
+window.setInterval("getUsersOnline();",5000);
+</script>
+<div  style="height: 100%;">
+	<div id="left" style="height: 100%;" class="left">
 		<div class="leftTop">
-			用户信息
+			<table align="center">
+				<tr><td><img src="showicon" width="50" height="50"></td>
+					<td><%= (String)session.getAttribute("nickname")%></td>
+				</tr>
+				<tr>
+					<td><input value="注销" onclick=""></td>
+				</tr>
+			</table>
 		</div>
 		<div class="leftMiddle">
 			功能键
 		</div>
-		<div class="leftBottom">
-			<div id="users">
-			</div>
+		<div class="leftBottom" id="nameList">
+			<h2>在线用户</h2><br>
 		</div>
 	</div>
-	<div id="right">
+	<div id="right" style="height: 100%;" class="right">
 		<div class="rightTop">
 			消息
 		</div>
 		<div class="rightBottom">
-			<form name="form1">
-				<table>
-					<tr><td><textarea name="message" id="message" style="width:720px;height:60px;"></textarea></td><td><input type="submit" name="send" id="send" value="发送" disabled="true" onclick="checkEmpty()"></td></tr>
-				</table>
-			</form>
+			<table align="center">
+			<tr>
+				<td>
+					<textarea name="message" id="message" style="width:720px;height:60px;" onclick="check()" onblur="check()"></textarea>
+				</td>
+				<td><input type="submit" name="send" id="send" value="SEND"></td>
+			</tr>
+			</table>
 		</div>
 	</div>
 

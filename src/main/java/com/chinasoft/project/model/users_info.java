@@ -30,7 +30,7 @@ public class users_info {
 	public void setIcon(byte[] icon) {
 		this.icon = icon;
 	}
-	public boolean isIs_online() {
+	public boolean getIs_online() {
 		return is_online;
 	}
 	public void setIs_online(boolean is_online) {
