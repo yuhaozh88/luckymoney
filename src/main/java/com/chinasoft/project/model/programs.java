@@ -6,6 +6,7 @@ public class programs {
 	String dept_name;
 	int money_get;
 	boolean is_live;
+	int program_order;
 	public int getPid() {
 		return pid;
 	}
@@ -36,5 +37,10 @@ public class programs {
 	public void setIs_live(boolean is_live) {
 		this.is_live = is_live;
 	}
-	
+	public int getProgram_order() {
+		return program_order;
+	}
+	public void setProgram_order(int program_order) {
+		this.program_order = program_order;
+	}
 }
