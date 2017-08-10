@@ -181,9 +181,9 @@ public class DBAccess {
 	 * @param jdbcTemplate
 	 * @return 返回-1查询失败
 	 */
-	public static int setAccountMoney(String itcode, int money_left, JdbcTemplate jdbcTemplate) {
+	public static int setWalletMoney(String itcode, int money, JdbcTemplate jdbcTemplate) {
 		try {
-			return jdbcTemplate.update("update wallet set money=? where itcode=?", new Object[] {money_left,itcode});
+			return jdbcTemplate.update("update wallet set money=? where itcode=?", new Object[] {money,itcode});
 		} catch(Exception e) {
 			return -1;
 		}
@@ -204,7 +204,61 @@ public class DBAccess {
 	 */
 	public static int addTradeLog(String itcode, int account_change, int money, String log_time, String dept_name, String trade_type, JdbcTemplate jdbcTemplate) {
 		try {
-			return jdbcTemplate.update("insert into trade_log values(?,?,?,?,?.?,?)",new Object[] {null,itcode,account_change,money,log_time,dept_name,trade_type});
+			return jdbcTemplate.update("insert into trade_log values(?,?,?,?,?,?,?)",new Object[] {null,itcode,account_change,money,log_time,dept_name,trade_type});
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	/**
+	 * @date Aug 9th
+	 * 查询节目所属的部门
+	 * @author yuhaozh88
+	 * @param pid
+	 * @param jdbcTemplate
+	 * @return 返回null查询失败
+	 */
+	public static String getDeptName(int pid, JdbcTemplate jdbcTemplate) {
+		RowMapper<programs> programs_mapper = new BeanPropertyRowMapper<programs>(programs.class);
+		try {
+			programs program = jdbcTemplate.queryForObject("select * from programs where pid=?", programs_mapper,pid);
+			return program.getDept_name();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * @date Aug 9th
+	 * 更新部门获得打赏金额
+	 * @author yuhaozh88
+	 * @param dept_name
+	 * @param account_change
+	 * @param jdbcTemplate
+	 * @return 返回-1更新失败
+	 */
+	public static int setDepartmentsMoney(String dept_name, int account_change, JdbcTemplate jdbcTemplate) {
+		try {
+			return jdbcTemplate.update("update departments set money_get=money_get+? where dept_name=?",new Object[] {account_change,dept_name});
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	/**
+	 * @date Aug 9th
+	 * 更新节目获得打赏金额
+	 * @author yuhaozh88
+	 * @param pid
+	 * @param account_change
+	 * @param jdbcTemplate
+	 * @return
+	 */
+	public static int setProgramsMoney(int pid, int account_change, JdbcTemplate jdbcTemplate) {
+		try {
+			return jdbcTemplate.update("update programs set money_get=money_get+? where pid=?",new Object[] {account_change,pid});
 		} catch (Exception e) {
 			return -1;
 		}

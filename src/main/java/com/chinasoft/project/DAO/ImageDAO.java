@@ -23,21 +23,27 @@ import org.springframework.http.HttpRequest;
 public class ImageDAO {
 	
 	
-	public static byte[] getIcon (HttpServletRequest request) {
+	public static byte[] getIcon (HttpServletRequest request) throws IOException {
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		File repository = new File("resources/img/");
 		factory.setRepository(repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
+		ServletInputStream in =request.getInputStream();
 			try {
 				List<FileItem> items = upload.parseRequest(request);
-				if (items != null) {//用户上传了头像
+				System.out.println(items.size());
+				if (items != null && in != null) {//用户上传了头像
 					System.out.println(items.size());
 					byte[] icon = null;
 					for (int i = 0; i < items.size();i += 1) {
 						FileItem item = items.get(i);
 						icon = item.get();
 					}
-					return icon;
+					if (icon.length < 1) {
+						return getDefaultIcon(request);
+					} else {
+						return icon;
+					}
 				} else {
 					return getDefaultIcon(request);
 				}

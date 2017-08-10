@@ -60,9 +60,10 @@ public class IconController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping("/uploadicon")
-	public String uploadicon (HttpServletRequest request, HttpServletResponse response) {
+	public String uploadicon (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("image/jpeg");
 		response.addHeader("Cache_Control",	 "no-cache");
 		response.addHeader("Pragma", "no-cache");

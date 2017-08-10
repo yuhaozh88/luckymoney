@@ -109,6 +109,11 @@ public class HomeController {
 		return "register";
 	}
 	
+	@RequestMapping("/chat")
+	public String chat() {
+		return "chat";
+	}
+	
 	@RequestMapping("/programs")
 	public String getPrograms (HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<programs> list =  DBAccess.getAllPrograms(jdbcTemplate);
