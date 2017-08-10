@@ -63,8 +63,13 @@ function checkConfirm(){
 		document.getElementById("warningConfirm").innerHTML = "确认密码不正确！";
 	} else {
 		check4 = false;
-		document.getElementById("warningConfirm").style.color = "red";
-		document.getElementById("warningConfirm").innerHTML = "确认密码不能为空！";
+		if (password != null && password != ""){
+			document.getElementById("warningConfirm").style.color = "red";
+			document.getElementById("warningConfirm").innerHTML = "确认密码不能为空！";
+		} else {
+			document.getElementById("warningConfirm").style.color = "red";
+			document.getElementById("warningConfirm").innerHTML = "";
+		}
 	}
 }
 function checkQuestion(){
@@ -138,7 +143,7 @@ function getRealname(){
 				if (realname != null && realname != ""){
 					check7 = true;
 					document.getElementById("realname").style.color = "green";
-					document.getElementById("realname").innerHTML = "欢迎" + realname + "！";
+					document.getElementById("realname").innerHTML = realname;
 				} else {
 					check7 = false;
 					document.getElementById("realname").style.color = "red";
@@ -171,7 +176,7 @@ function submitForm(){
 	var question = document.getElementById("question").value;
 	var answer = document.getElementById("answer").value;
 	var password = document.getElementById("password").value;
-	httpRequest.open("get","login?itcode="+itcode+"&nickname="+nickname+"&dept_name="+dept_name+"&question="+question+"&answer="+answer+"&password="+password,true);
+	httpRequest.open("get","signup?itcode="+itcode+"&nickname="+nickname+"&dept_name="+dept_name+"&question="+question+"&answer="+answer+"&password="+password,true);
 	httpRequest.onreadystatechange = function (){
 		if (httpRequest.readyState == 4){
 			if (httpRequest.status == 200){
@@ -238,18 +243,19 @@ function strength(pwd)
         switch(S_level)
         {    
 	        case 0:    
-	            Lcolor=Mcolor=Hcolor=Dfault_color;
+	        	 Lcolor=L_color;  
+		            check3 = false;
+		            document.getElementById("warningPassword").style.color = "red";
+		            document.getElementById("warningPassword").innerHTML="密码强度低，请使用更复杂的密码";
+		            Mcolor=Hcolor=Dfault_color;  
+		            break;    
+	        case 1:    
+	        	Lcolor=L_color;  
 	            check3 = false;
 	            document.getElementById("warningPassword").style.color = "red";
-	            document.getElementById("warningPassword").innerHTML="密码过短，最少3位";
-	            break;  
-	        case 1:    
-	            Lcolor=L_color;  
-	            check3 = true;
-	            document.getElementById("warningPassword").style.color = "green";
-	            document.getElementById("warningPassword").innerHTML="密码强度低";
+	            document.getElementById("warningPassword").innerHTML="密码强度低，请使用更复杂的密码";
 	            Mcolor=Hcolor=Dfault_color;  
-	            break;    
+	            break;     
 	        case 2:    
 	            Lcolor=Mcolor=M_color;
 	            check3 = true;
@@ -319,7 +325,7 @@ window.setInterval("checkEmpty();checkChangeIcon();",1000);
 	<tr>
 		<td>密码</td>
 		<td><div style="color:red;">*</div></td>
-		<td><input type="password" name="password" id="password" onclick="checkEmpty()" onblur="strength(this.value);checkConfirm();checkEmpty();"></td>
+		<td><input type="password" name="password" id="password" oninput="strength(this.value);"onclick="checkEmpty()" onblur="checkConfirm();checkEmpty();"></td>
 		<td><div id="warningPassword"></div></td><td  id="strength_L" bgcolor="#eeeeee">弱&nbsp;&nbsp;</td> 
 		<td id="strength_M" bgcolor="#eeeeee">中&nbsp;&nbsp;</td><td id="strength_H" bgcolor="#eeeeee">强&nbsp;&nbsp;</td>
 	</tr>

@@ -35,6 +35,7 @@ public class DBAccess {
 				return null;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -106,6 +107,7 @@ public class DBAccess {
 		try {
 			return jdbcTemplate.update("insert into wallet values(?,?,?)", new Object[] {null,itcode,0});
 		} catch(Exception e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -114,6 +116,7 @@ public class DBAccess {
 		try {
 			return jdbcTemplate.update("update users_info set icon = ? where itcode = ?",new Object[] {icon,itcode});
 		} catch (Exception e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -132,6 +135,7 @@ public class DBAccess {
 			return user.getIcon();
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return null;
 		}
 	}	
@@ -150,6 +154,7 @@ public class DBAccess {
 			return list;
 		} catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -168,6 +173,7 @@ public class DBAccess {
 			wallet w = jdbcTemplate.queryForObject("select * from wallet where itcode=?", wallet_mapper, itcode);
 			return w.getMoney();
 		} catch (Exception e){
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -185,6 +191,7 @@ public class DBAccess {
 		try {
 			return jdbcTemplate.update("update wallet set money=? where itcode=?", new Object[] {money,itcode});
 		} catch(Exception e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -225,6 +232,7 @@ public class DBAccess {
 			programs program = jdbcTemplate.queryForObject("select * from programs where pid=?", programs_mapper,pid);
 			return program.getDept_name();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -254,12 +262,31 @@ public class DBAccess {
 	 * @param pid
 	 * @param account_change
 	 * @param jdbcTemplate
-	 * @return
+	 * @return 返回-1更新失败
 	 */
 	public static int setProgramsMoney(int pid, int account_change, JdbcTemplate jdbcTemplate) {
 		try {
 			return jdbcTemplate.update("update programs set money_get=money_get+? where pid=?",new Object[] {account_change,pid});
 		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	/**
+	 * @date Aug 10th
+	 * 更改用户的在线状态
+	 * @author yuhaozh88
+	 * @param itcode
+	 * @param is_online
+	 * @param jdbcTemplate
+	 * @return 返回-1更改状态失败
+	 */
+	public static int setUsersOnlineStatus(String itcode, boolean is_online, JdbcTemplate jdbcTemplate) {
+		try {
+			return jdbcTemplate.update("update users_info set is_online=? where itcode=?" ,new Object[] {is_online,itcode});
+		} catch (Exception e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}

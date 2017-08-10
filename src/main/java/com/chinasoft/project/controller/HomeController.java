@@ -58,7 +58,7 @@ public class HomeController {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("/login")
+	@RequestMapping("/signup")
 	public void login(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			request.setCharacterEncoding("UTF-8");
