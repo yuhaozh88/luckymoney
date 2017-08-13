@@ -72,19 +72,36 @@ public class IconController {
 		byte[] icon = ImageDAO.getIcon(request);
 		String itcode = (String)session.getAttribute("itcode");
 		DBAccess.updateUsersIcon(itcode, icon, jdbcTemplate);
+//		session.removeAttribute("itcode");
+//		session.removeAttribute("nickname");
 		return "chat";
 	}
 	
 	/**
-	 * 为聊天界面提供用户的头像
+	 * 在聊天界面显示当前用户的头像
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("showicon")
-	public void showicon(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping("/showclienticon")
+	public void showclienticon(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		String itcode = (String)session.getAttribute("itcode");
 		byte[] image = DBAccess.getUsersIcon(itcode, jdbcTemplate);
+		ByteArrayInputStream in = new ByteArrayInputStream(image);
+		try {
+			BufferedImage icon = ImageIO.read(in);
+			ImageIO.write(icon, "jpg", response.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("/showmessagesicon")
+	public void showmessagesicon(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		String itcode_in_messages = (String)session.getAttribute("itcode_in_messages");
+		byte[] image = DBAccess.getUsersIcon(itcode_in_messages, jdbcTemplate);
 		ByteArrayInputStream in = new ByteArrayInputStream(image);
 		try {
 			BufferedImage icon = ImageIO.read(in);

@@ -58,6 +58,14 @@ public class UsersController {
 	JdbcTemplate jdbcTemplate;
 	
 	
+	
+	/**
+	 * 用户注册时验证itcode是否存在并且判断用户是否已经注册
+	 * @author yuhaozh88
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping("/getrealname")
 	public void getrealname(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
@@ -71,14 +79,25 @@ public class UsersController {
 		String itcode = request.getParameter("itcode");
 		String realname = DBAccess.getUsersRealname(itcode, jdbcTemplate);
 		PrintWriter out = response.getWriter();
-		if (realname != null) {
-			out.print(realname);
-		} else {
+		if (realname != null) {//itcode存在
+			boolean is_registered = DBAccess.checkIsRegistered(itcode, jdbcTemplate);
+			if (!is_registered) {//用户还没有注册过
+				out.print(realname);
+			} else {
+				out.print("@@");
+			}
+		} else {//itcode
 			out.print("");
 		}
 	}
 	
-	
+	/**
+	 * 获取当前所有用户列表，以字符串形式返回在线用户信息
+	 * @author yuhaozh88
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping("/getusersonline")
 	public void getusersonline(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
@@ -89,22 +108,18 @@ public class UsersController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String check = request.getParameter("usersonline");
 		HttpSession session = request.getSession();
 		ServletContext application = session.getServletContext();
 		PrintWriter out = response.getWriter();
 		
 		String nameList = "";
-		if (check.equals("check")) {
-			Hashtable<String, users_short_info> usersOnline = (Hashtable<String, users_short_info>)application.getAttribute("usersOnline");
-			Set<String> users = usersOnline.keySet();
-			for (String user : users) {
-				users_short_info temp = usersOnline.get(user);
-				nameList += " <br>" + temp.getNickname();
-			}
-			out.print(nameList);
-		} else {
-			out.print(nameList);
+		
+		Hashtable<String, users_short_info> usersOnline = (Hashtable<String, users_short_info>)application.getAttribute("usersOnline");
+		Set<String> users = usersOnline.keySet();
+		for (String user : users) {
+			users_short_info temp = usersOnline.get(user);
+			nameList += " <br>" + "用户：" + temp.getNickname();
 		}
+		out.print(nameList);
 	}
 }

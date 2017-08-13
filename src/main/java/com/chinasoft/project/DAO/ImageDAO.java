@@ -31,9 +31,7 @@ public class ImageDAO {
 		ServletInputStream in =request.getInputStream();
 			try {
 				List<FileItem> items = upload.parseRequest(request);
-				System.out.println(items.size());
 				if (items != null && in != null) {//用户上传了头像
-					System.out.println(items.size());
 					byte[] icon = null;
 					for (int i = 0; i < items.size();i += 1) {
 						FileItem item = items.get(i);

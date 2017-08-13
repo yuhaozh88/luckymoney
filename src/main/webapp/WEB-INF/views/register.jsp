@@ -30,12 +30,12 @@ function checkNickname(){
 	var nickname = document.getElementById("nickname").value;
 	if (nickname != null && nickname != ""){
 		check2 = true;
-		document.getElementById("warningNickename").style.color = "green";
-		document.getElementById("warningNickename").innerHTML = "√";
+		document.getElementById("warningnickname").style.color = "green";
+		document.getElementById("warningnickname").innerHTML = "√";
 	} else {
 		check2 = false;
-		document.getElementById("warningNickename").style.color = "red";
-		document.getElementById("warningNickename").innerHTML = "昵称不能为空！";
+		document.getElementById("warningnickname").style.color = "red";
+		document.getElementById("warningnickname").innerHTML = "昵称不能为空！";
 	}
 }
 function checkPassword(){
@@ -140,10 +140,14 @@ function getRealname(){
 		if (httpRequest.readyState == 4){
 			if (httpRequest.status == 200){
 				var realname = httpRequest.responseText;
-				if (realname != null && realname != ""){
+				if (realname != null && realname != "" && realname != "@@"){
 					check7 = true;
 					document.getElementById("realname").style.color = "green";
 					document.getElementById("realname").innerHTML = realname;
+				} else if (realname == "@@"){
+					check7 = false;
+					document.getElementById("realname").style.color = "red";
+					document.getElementById("realname").innerHTML = "该用户已注册！";
 				} else {
 					check7 = false;
 					document.getElementById("realname").style.color = "red";
@@ -320,7 +324,7 @@ window.setInterval("checkEmpty();checkChangeIcon();",1000);
 	<tr>
 		<td>昵称</td><td><div style="color:red;">*</div></td>
 		<td><input type ="text" name="nickname" id="nickname" onclick="checkEmpty()" onblur="checkNickname();checkEmpty();"></td>
-		<td><div id="warningNickename"></div></td>
+		<td><div id="warningnickname"></div></td>
 	</tr>
 	<tr>
 		<td>密码</td>

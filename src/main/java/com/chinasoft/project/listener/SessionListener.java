@@ -78,7 +78,7 @@ public class SessionListener implements HttpSessionAttributeListener {
     	HttpSession session = arg0.getSession();
     	ServletContext application = session.getServletContext();
     	String sessionID = session.getId();
-    	Hashtable<String, users_short_info> usersOnline = (Hashtable<String, users_short_info>)session.getAttribute("usersOnline");
+    	Hashtable<String, users_short_info> usersOnline = (Hashtable<String, users_short_info>)application.getAttribute("usersOnline");
     	//通过sessionID获取离线的简短信息
     	users_short_info user = usersOnline.get(sessionID);
     	if (user != null) {//获取到了离线用户的简短信息

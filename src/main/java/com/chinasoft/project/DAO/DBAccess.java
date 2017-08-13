@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.validation.BeanPropertyBindingResult;
 
+import com.chinasoft.project.model.messages;
 import com.chinasoft.project.model.programs;
 import com.chinasoft.project.model.users_info;
 import com.chinasoft.project.model.users_pwd;
@@ -288,6 +289,69 @@ public class DBAccess {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
+		}
+	}
+	
+	
+	/**
+	 * @date Aug 10th
+	 * 通过密码表查看当前itcode用户是否已经注册
+	 * @author yuhaozh88
+	 * @param itcode
+	 * @param jdbcTemplate
+	 * @return true表示用户已经注册过，false表示用户还没有注册过
+	 */
+	public static boolean checkIsRegistered(String itcode, JdbcTemplate jdbcTemplate) {
+		RowMapper<users_pwd> users_pwd_mapper = new BeanPropertyRowMapper<users_pwd>(users_pwd.class);
+		try {
+			List<users_pwd> pwd = jdbcTemplate.query("select * from users_pwd where itcode = ?",users_pwd_mapper,itcode);
+			if (pwd == null || pwd.size() < 1) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return true;
+		}
+	}
+	
+	/**
+	 * @date Aug 10th
+	 * 向聊天信息表中添加聊天信息
+	 * @author yuhaozh88
+	 * @param itcode
+	 * @param nickname
+	 * @param message
+	 * @param message_time
+	 * @param jdbcTemplate
+	 * @return 返回-1插入失败
+	 */
+	public static int addMessages(String itcode, String nickname, String message, String message_time, JdbcTemplate jdbcTemplate) {
+		try {
+			return jdbcTemplate.update("insert into messages values (?,?,?,?)",new Object[] {itcode,nickname,message,message_time});
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	/**
+	 * @date Aug 10th
+	 * 查询最近的100条消息
+	 * @author yuhaozh88
+	 * @param jdbcTemplate
+	 * @return 返回null查询失败
+	 */
+	public static List<messages> getMessages(JdbcTemplate jdbcTemplate){
+		RowMapper<messages> messages_mapper = new BeanPropertyRowMapper<messages>(messages.class);
+		try {
+			List<messages> list = jdbcTemplate.query("select * from messages order by message_time desc limit 100", messages_mapper);
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

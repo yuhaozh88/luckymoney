@@ -109,11 +109,27 @@ public class HomeController {
 		return "register";
 	}
 	
+	
+	/**
+	 * @date Aug 10th
+	 * 前往聊天界面
+	 * @author yuhaozh88
+	 * @return
+	 */
 	@RequestMapping("/chat")
 	public String chat() {
 		return "chat";
 	}
 	
+	/**
+	 * @date Aug 10th
+	 * 前往节目打赏界面
+	 * @author yuhaozh88
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/programs")
 	public String getPrograms (HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<programs> list =  DBAccess.getAllPrograms(jdbcTemplate);
